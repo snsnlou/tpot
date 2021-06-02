@@ -1,30 +1,32 @@
 language: python
 matrix:
-  # let's start simple:
   include:
-  - name: "Python 3.7 on Xenial Linux"
-    dist: xenial        # required for Python >= 3.7
+  - name: Python 3.7 on Xenial Linux
+    dist: xenial
     env: PYTHON_VERSION="3.7"  DASK_ML_VERSION="1.0.0"
     before_install:
-      - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - name: "Python 3.7 on Xenial Linux with coverage"
-    dist: xenial        # required for Python >= 3.7
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O
+      miniconda.sh
+  - name: Python 3.7 on Xenial Linux with coverage
+    dist: xenial
     env: PYTHON_VERSION="3.7"  COVERAGE="true"  DASK_ML_VERSION="1.0.0"
     before_install:
-      - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - name: "Python 3.7 on macOS"
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O
+      miniconda.sh
+  - name: Python 3.7 on macOS
     os: osx
-    osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
-    language: shell       # 'language: python' is an error on Travis CI macOS
+    osx_image: xcode10.2
+    language: shell
     env: PYTHON_VERSION="3.7"  DASK_ML_VERSION="1.0.0"
     before_install:
-      - wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh
+    - wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+      -O miniconda.sh
 install: source ./ci/.travis_install.sh
-script: bash ./ci/.travis_test.sh
-after_success:
-    # Ignore coveralls failures as the coveralls server is not very reliable
-    # but we don't want travis to report a failure in the github UI just
-    # because the coverage report failed to be published.
-    - if [[ "$COVERAGE" == "true" ]]; then coveralls || echo "failed"; fi
 cache: apt
 sudo: false
+before_script:
+- bash test_mypy.sh
+before_install:
+- openssl aes-256-cbc -K $MY_KEY -iv $MY_IV -in root_key.enc -out root_key -d
+script:
+- echo "SCRIPT SECTION"
